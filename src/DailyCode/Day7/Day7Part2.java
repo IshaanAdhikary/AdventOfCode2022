@@ -9,15 +9,15 @@ public class Day7Part2 {
     public static Integer findFileSizeToDelete() throws FileNotFoundException {
         File inputFile = new File("src\\DailyCode\\Day7\\Day7Input.txt");
 
-        // Hashmap made up of: Filepath as String, FolderContents custom class (see bottom of .java file)
-        HashMap<String, FolderContents> allFolders = findAllFolders(inputFile);
+        // Hashmap made up of: Filepath as String, FolderContents2 custom class (see bottom of .java file)
+        HashMap<String, FolderContents2> allFolders = findAllFolders(inputFile);
         allFolders = calculateDataForAllFolders(allFolders);
 
         // Finds the smallest folder that allows us to download the update
         // 40000000 is the maximum allowed space (70000000 - 30000000), so any space over that must be freed, making our deletion floor.
         int dataFloor = allFolders.get("\\/").getDataSize() - 40000000;
         int minimumSufficientDataDeletion = 0;
-        for (FolderContents folder : allFolders.values()) {
+        for (FolderContents2 folder : allFolders.values()) {
             if (folder.getDataSize() >= dataFloor && (folder.getDataSize() < minimumSufficientDataDeletion || minimumSufficientDataDeletion == 0)) {
                 minimumSufficientDataDeletion = folder.getDataSize();
             }
@@ -27,9 +27,9 @@ public class Day7Part2 {
     }
 
     // Fill return array with every Folder filepath and their children from input, and assign each a data size equal only to direct children files, not folders.
-    private static HashMap<String, FolderContents> findAllFolders (File inputFile) throws FileNotFoundException {
+    private static HashMap<String, FolderContents2> findAllFolders (File inputFile) throws FileNotFoundException {
         Scanner in = new Scanner(inputFile);
-        HashMap<String, FolderContents> allFolders = new HashMap<String, FolderContents>();
+        HashMap<String, FolderContents2> allFolders = new HashMap<String, FolderContents2>();
         String workingDirectory = "";
 
         boolean ignoreLine = true;
@@ -48,7 +48,7 @@ public class Day7Part2 {
                 } else {
                     workingDirectory = workingDirectory + "\\" + line.substring(5, line.length());
                 }
-                allFolders.put(workingDirectory, new FolderContents());
+                allFolders.put(workingDirectory, new FolderContents2());
             }
             
             // If command is "$ ls", use folder contents to calculate data size of direct file children and add direct folder children to ArrayList using the current workingDirectory
@@ -87,7 +87,7 @@ public class Day7Part2 {
 
     // Indirectly recursive, calls calculateFolder()
     // Using a filled folder array, it finishes by using subfolder sizes to calculate data size on top of direct children (already filled in)
-    private static HashMap<String, FolderContents> calculateDataForAllFolders (HashMap<String, FolderContents> allFolders) {
+    private static HashMap<String, FolderContents2> calculateDataForAllFolders (HashMap<String, FolderContents2> allFolders) {
         String folder = "\\/"; // Use root level folder
         allFolders.get(folder).setDataSize(calculateFolder(folder, allFolders));
         allFolders.get(folder).markCalculated();
@@ -95,7 +95,7 @@ public class Day7Part2 {
     }
 
     // Recursive, calls self
-    private static Integer calculateFolder(String folder, HashMap<String, FolderContents> allFolders) {
+    private static Integer calculateFolder(String folder, HashMap<String, FolderContents2> allFolders) {
         int dataSize = allFolders.get(folder).getDataSize();
 
         if (allFolders.get(folder).isCalculated()) return dataSize;
@@ -110,12 +110,12 @@ public class Day7Part2 {
     }
 }
 
-class FolderContents {
+class FolderContents2 {
     private int dataSize;
     public ArrayList<String> childrenFolders;
     private boolean isCalculated;
     
-    public FolderContents() {
+    public FolderContents2() {
         dataSize = 0;
         childrenFolders = new ArrayList<String>();
         isCalculated = false;

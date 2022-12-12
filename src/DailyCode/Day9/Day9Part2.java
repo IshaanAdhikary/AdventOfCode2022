@@ -10,9 +10,9 @@ public class Day9Part2 {
 		Scanner in = new Scanner(file);
 
         // The first knot (knot[0]) is the head, everything else is the following tails
-        Cell[] knots = new Cell[10];
-        for (int i = 0; i < knots.length; i++) knots[i] = new Cell(0, 0);
-        HashSet<Cell> cellsVisitedByLastTail = new HashSet<Cell>();
+        Cell2[] knots = new Cell2[10];
+        for (int i = 0; i < knots.length; i++) knots[i] = new Cell2(0, 0);
+        HashSet<Cell2> cellsVisitedByLastTail = new HashSet<Cell2>();
         cellsVisitedByLastTail.add(knots[9]);
 
         while (in.hasNextLine()) {
@@ -49,17 +49,17 @@ public class Day9Part2 {
     }
 }
 
-class Cell {
+class Cell2 {
     private int x;
     private int y;
 
-    public Cell(int setX, int setY) {
+    public Cell2(int setX, int setY) {
         x = setX;
         y = setY;
     }
 
-    public Cell duplicateCell() {
-        return new Cell(x, y);
+    public Cell2 duplicateCell() {
+        return new Cell2(x, y);
     }
 
     public void move (int moveX, int moveY) {
@@ -67,12 +67,12 @@ class Cell {
         y += moveY;
     }
 
-    public void moveTowards (Cell otherCell) {
+    public void moveTowards (Cell2 otherCell) {
         if (this.isAdjacent(otherCell)) return;
         this.move(Integer.signum(otherCell.x - x), Integer.signum(otherCell.y - y));
     }
 
-    private boolean isAdjacent(Cell otherCell) {
+    private boolean isAdjacent(Cell2 otherCell) {
         if (Math.abs(otherCell.x - x) <= 1 && Math.abs(otherCell.y - y) <= 1) return true;
         return false;
     }
@@ -80,9 +80,9 @@ class Cell {
     @Override
     public boolean equals(Object originalObject) {
         if (originalObject == this) return true;
-        if (!(originalObject instanceof Cell)) return false;
+        if (!(originalObject instanceof Cell2)) return false;
 
-        Cell object = (Cell) originalObject;
+        Cell2 object = (Cell2) originalObject;
 
         return x == object.x && y == object.y;
     }
